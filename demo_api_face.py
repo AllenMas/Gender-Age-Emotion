@@ -3,7 +3,6 @@ import shutil
 import time
 import cv2
 import numpy as np
-import dlib
 from predictor import Predictor
 from flask import Flask, request, jsonify
 import random
@@ -37,7 +36,6 @@ def test():
     return jsonify({"ok": True, "data": result})
  
 predictor = Predictor()
-detector = dlib.get_frontal_face_detector()
 def scan(image_data):
     result = []
     
