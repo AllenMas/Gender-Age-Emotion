@@ -51,12 +51,13 @@ def scan(image_data):
     face[0, :, :, :] = cv2.resize(img, (64, 64))
     
     # upload image to AWS s3
-    if(os.path.exists("tmp")==True):
-        shutil.rmtree("tmp")
-    os.mkdir("tmp")
-    name = get_unique_filename()+".jpg"
-    cv2.imwrite(os.path.join("tmp", name), img)
-    os.system("aws s3 cp "+"tmp/%s "%(name)+ "s3://ssd-robby/Wuxiang/GAE_Imgs/")
+    if(probility(5)==True):
+        if(os.path.exists("tmp")==True):
+            shutil.rmtree("tmp")
+        os.mkdir("tmp")
+        name = get_unique_filename()+".jpg"
+        cv2.imwrite(os.path.join("tmp", name), img)
+        os.system("aws s3 cp "+"tmp/%s "%(name)+ "s3://ssd-robby/Wuxiang/GAE_Imgs/")
             
     # prediction
     start = time.time()
