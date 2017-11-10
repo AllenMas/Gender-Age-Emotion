@@ -43,11 +43,17 @@ for img in imgs:
     face, x1, y1, x2, y2, condition = face_detector(os.path.join("testsample", img), 64)
     if condition == True:
         start = time.clock()
-        gender, age, emotion = predictor.inference(face)
+        predicted_genders, predicted_ages, predicted_emotion = predictor.inference(face)
         end = time.clock()
-        print("time: %f"%(end-start)+'\t'+img+'\t'+gender+'\t'+age+'\t'+emotion)
+        
+        gender = "female" if predicted_genders[0].argmax() == 0 else "male"
+        age = int(predicted_ages[0])
+        EMOTION_LIST = ["sad", "happy", "surprise", "angry", "neutral"]
+        emotion = EMOTION_LIST[predicted_emotion[0].argmax()]
+        
+        print("time: %f"%(end-start)+'\t'+img+'\t'+gender+'\t'+str(age)+'\t'+emotion)
           
         im = cv2.imread(os.path.join("testsample", img))
         cv2.rectangle(im, (x1, y1), (x2, y2), (255, 0, 0), 2)
-        draw_label(im, (x1, y2), gender+', '+age+', '+emotion)
+        draw_label(im, (x1, y2), gender+', '+str(age)+', '+emotion)
         cv2.imwrite(os.path.join("result", img), im)

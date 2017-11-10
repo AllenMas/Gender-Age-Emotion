@@ -32,7 +32,10 @@ def test():
         return jsonify({"ok": False, "message": "file is none or valid"})
      
     image_data = np.fromstring(file.read(), np.uint8)
+    start = time.time()
     result = scan(image_data)
+    end = time.time()
+    print("GAE server time: %f"%(end-start))
     return jsonify({"ok": True, "data": result})
  
 predictor = Predictor()
@@ -47,7 +50,7 @@ def scan(image_data):
     face[0, :, :, :] = cv2.resize(img, (64, 64))
     
     # upload image to AWS s3
-    if(probility(100)):
+    if(probility(5)):
         files = os.listdir("tmp")
         if(len(files)!=0):
             shutil.rmtree("tmp")
