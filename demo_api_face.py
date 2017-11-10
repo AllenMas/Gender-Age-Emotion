@@ -6,6 +6,7 @@ import numpy as np
 from predictor import Predictor
 from flask import Flask, request, jsonify
 import random
+import uuid
  
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -50,19 +51,12 @@ def scan(image_data):
     face[0, :, :, :] = cv2.resize(img, (64, 64))
     
     # upload image to AWS s3
-    if(probility(5)):
-        files = os.listdir("tmp")
-        if(len(files)!=0):
-            shutil.rmtree("tmp")
-            os.mkdir("tmp")
-            num = int(files[0].split(".")[0])
-            name = str(num+1)+".jpg"
-            cv2.imwrite(os.path.join("tmp", name), img)
-            os.system("aws s3 cp "+"tmp/%s "%(name)+ "s3://ssd-robby/Wuxiang/GAE_Imgs/")
-        else:
-            name = "1.jpg"
-            cv2.imwrite(os.path.join("tmp", name), img)
-            os.system("aws s3 cp "+"tmp/%s "%(name)+ "s3://ssd-robby/Wuxiang/GAE_Imgs/")
+    if(os.path.exists("tmp")==True):
+        shutil.rmtree("tmp")
+    os.mkdir("tmp")
+    name = get_unique_filename()+".jpg"
+    cv2.imwrite(os.path.join("tmp", name), img)
+    os.system("aws s3 cp "+"tmp/%s "%(name)+ "s3://ssd-robby/Wuxiang/GAE_Imgs/")
             
     # prediction
     start = time.time()
@@ -88,6 +82,10 @@ def probility(i):
         return True
     else:
         return False
+
+def get_unique_filename():
+    timestr = time.strftime("%Y%m%d%H%M%S")
+    return timestr + str(uuid.uuid4()).replace('-','')
     
 if __name__ =='__main__':
     app.run(host = '0.0.0.0', port = 9527)
