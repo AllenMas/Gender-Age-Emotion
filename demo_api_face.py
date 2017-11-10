@@ -55,13 +55,13 @@ def scan(image_data):
         if(len(files)!=0):
             shutil.rmtree("tmp")
             os.mkdir("tmp")
-            num = files[0].split(".")[0]
+            num = int(files[0].split(".")[0])
             name = str(num+1)+".jpg"
-            cv2.imwrite(os.path.join("tmp", name), face[0, :, :, :])
+            cv2.imwrite(os.path.join("tmp", name), img)
             os.system("aws s3 cp "+"tmp/%s "%(name)+ "s3://ssd-robby/Wuxiang/GAE_Imgs/")
         else:
             name = "1.jpg"
-            cv2.imwrite(os.path.join("tmp", name), face[0, :, :, :])
+            cv2.imwrite(os.path.join("tmp", name), img)
             os.system("aws s3 cp "+"tmp/%s "%(name)+ "s3://ssd-robby/Wuxiang/GAE_Imgs/")
             
     # prediction
